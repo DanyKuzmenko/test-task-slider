@@ -1,0 +1,148 @@
+@mixin font($weight, $size, $height, $color) {
+  font: {
+    family: "Roboto";
+    weight: $weight;
+    size: $size;
+  }
+  line-height: $height;
+  color: $color;
+}
+
+@mixin flex-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.carousel {
+
+  &__header {
+    @include flex-space-between;
+    margin: 120px 0 40px 0;
+  }
+
+  &__header-title {
+    @include font(700, 50px, 60px, #527CCD);
+    margin: 0;
+    padding: 0;
+  }
+
+  &__menu {
+    @include flex-space-between;
+    align-items: center;
+  }
+
+  &__progress-bar {
+    display: flex;
+  }
+
+  &__progress {
+    width: 60px;
+    height: 1px;
+    background-color: #C8D9FB;
+  }
+
+  &__progress_active {
+    background-color: #527CCD;
+  }
+
+  &__buttons {
+    @include flex-space-between;
+  }
+
+  &__button {
+    width: 60px;
+    height: 60px;
+    border: 1px solid #C8D9FB;
+    background-color: #fff;
+    margin: 0 40px 0 40px;
+    background-image: url("./images/LeftButton.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+  }
+
+  &__button:last-of-type {
+    background-image: url("./images/RightButton.svg");
+    margin: 0;
+  }
+
+  &__button:hover {
+    opacity: .7;
+    background-color: #CDF;
+  }
+
+  &__item {
+    height: 420px;
+    border: 1px solid #527CCD;
+    margin: 0 40px 0 0;
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  &__item:nth-of-type(4n) {
+    margin: 0;
+  }
+
+  &__image {
+    width: 220px;
+    height: 160px;
+    margin: 20px 20px 10px 20px;
+    padding: 0;
+  }
+
+  &__date {
+    @include font(400, 12px, 22px, #527CCD);
+    margin: 0 0 0 20px;
+    padding: 0;
+    opacity: .6;
+  }
+
+  &__title {
+    @include font(400, 16px, 26px, #527CCD);
+    margin: 10px 20px;
+    padding: 0;
+    max-width: 220px;
+    white-space: normal;
+    word-wrap: break-word;
+  }
+
+  &__text {
+    @include font(400, 12px, 22px, #527CCD);
+    margin: 0 20px 22px 20px;
+    padding: 0;
+    max-width: 220px;
+    white-space: normal;
+    word-wrap: break-word;
+
+  }
+
+  &__inner {
+    white-space: nowrap;
+    transition: transform 1s;
+    display: flex;
+  }
+
+  overflow: hidden;
+}
+
+@media screen and (max-width: 1160px) {
+  .carousel {
+
+    &__header {
+      margin: 100px 0 40px 0;
+    }
+
+    &__header__title {
+      @include font(700, 40px, 50px, #527CCD);
+    }
+
+    
+
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .carousel {
+
+  }
+}

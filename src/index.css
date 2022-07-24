@@ -1,0 +1,129 @@
+@import './vendor/normalize.css';
+@font-face {
+  font-family: "Roboto";
+  src: url("./vendor/fonts/Roboto-Bold.ttf") format("woff"), url("./vendor/fonts/Roboto-Bold.ttf") format("woff2");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("./vendor/fonts/Roboto-Regular.ttf") format("woff"), url("./vendor/fonts/Roboto-Regular.ttf") format("woff2");
+  font-weight: 400;
+}
+.slider {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+.carousel {
+  overflow: hidden;
+}
+.carousel__header {
+  display: flex;
+  justify-content: space-between;
+  margin: 120px 0 40px 0;
+}
+.carousel__header-title {
+  font-family: "Roboto";
+  font-weight: 700;
+  font-size: 50px;
+  line-height: 60px;
+  color: #527CCD;
+  margin: 0;
+  padding: 0;
+}
+.carousel__menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.carousel__progress-bar {
+  display: flex;
+}
+.carousel__progress {
+  width: 60px;
+  height: 1px;
+  background-color: #C8D9FB;
+}
+.carousel__progress_active {
+  background-color: #527CCD;
+}
+.carousel__buttons {
+  display: flex;
+  justify-content: space-between;
+}
+.carousel__button {
+  width: 60px;
+  height: 60px;
+  border: 1px solid #C8D9FB;
+  background-color: #fff;
+  margin: 0 40px 0 40px;
+  background-image: url("./images/LeftButton.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+}
+.carousel__button:last-of-type {
+  background-image: url("./images/RightButton.svg");
+  margin: 0;
+}
+.carousel__button:hover {
+  opacity: 0.7;
+  background-color: #CDF;
+}
+.carousel__item {
+  height: 420px;
+  border: 1px solid #527CCD;
+  margin: 0 40px 0 0;
+  box-sizing: border-box;
+  position: relative;
+}
+.carousel__item:nth-of-type(4n) {
+  margin: 0;
+}
+.carousel__image {
+  width: 220px;
+  height: 160px;
+  margin: 20px 20px 10px 20px;
+  padding: 0;
+}
+.carousel__date {
+  font-family: "Roboto";
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 22px;
+  color: #527CCD;
+  margin: 0 0 0 20px;
+  padding: 0;
+  opacity: 0.6;
+}
+.carousel__title {
+  font-family: "Roboto";
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 26px;
+  color: #527CCD;
+  margin: 10px 20px;
+  padding: 0;
+  max-width: 220px;
+  white-space: normal;
+  word-wrap: break-word;
+}
+.carousel__text {
+  font-family: "Roboto";
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 22px;
+  color: #527CCD;
+  margin: 0 20px 22px 20px;
+  padding: 0;
+  max-width: 220px;
+  white-space: normal;
+  word-wrap: break-word;
+}
+.carousel__inner {
+  white-space: nowrap;
+  transition: transform 1s;
+  display: flex;
+}
+
+/*# sourceMappingURL=index.css.map */
