@@ -1,9 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import '../../index.css';
 
-export function CarouselItem({
-                                 width, image, date, title, text,
-                             }) {
+export function CarouselItem({ width, image, date, title, text }) {
     return (
         <div className="carousel__item" style={{width}}>
             <img className="carousel__image" src={image} alt=""/>
@@ -19,6 +17,12 @@ function Carousel({children}) {
     // Этот стейт отвечает за индекс отображаемых карточек
     const [startX, setStartX] = React.useState(0);
     // Этот стейт записывает начальное положение зажатой мыши
+    const [windowWidth, setWindowWidth] = React.useState(1160);
+    // Этот стейт отвечает за ширину экрана
+    const [width, setWidth] = React.useState(0);
+    // Этот стейт отвечает за ширину карточек в зависимости от разрешения
+    const [marginWidth, setMarginWidth] = React.useState(30);
+    // Этот стейт отвечает за ширину отступа по краям у слайдера
     const slider = React.useRef(null);
     // С помощью рефа связываем slider
 
@@ -33,6 +37,39 @@ function Carousel({children}) {
     //             clearInterval(interval);
     //     }
     // })
+
+    useEffect(() => { // Эффект, который в зависимости от ширины экрана меняет ширину карточек
+        if (windowWidth < 768) {
+            setWidth(200);
+        } else if (windowWidth < 1160) {
+            setWidth(240);
+            setMarginWidth(20);
+        } else {
+            setWidth(260);
+            setMarginWidth(30);
+        }
+    }, [windowWidth])
+
+    useEffect(() => {
+        onSubscribe();
+        return () => offSubscribe();
+    }, [])
+
+    const handleSubscribe = () => {
+        setWindowWidth(window.innerWidth);
+    }
+
+    const onSubscribe = () => {
+        window.addEventListener('resize', function () {
+            setTimeout(handleSubscribe, 1000);
+        })
+    }
+
+    const offSubscribe = () => {
+        window.removeEventListener('resize', function () {
+            setTimeout(handleSubscribe, 1000);
+        })
+    }
 
     const leftButtonClick = () => {
         updateIndex(activeIndex - 1);
@@ -101,7 +138,7 @@ function Carousel({children}) {
             <div className="carousel">
                 <div
                     className="carousel__inner"
-                    style={{transform: `translateX(-${activeIndex * 100}%)`}}
+                    style={{transform: `translateX(-${activeIndex * (windowWidth - marginWidth)}px)`}}
                     onTouchStart={handleMouseDown}
                     onTouchEnd={handleMouseUp}
                     onMouseDown={handleMouseDown}
@@ -109,7 +146,7 @@ function Carousel({children}) {
                     ref={slider}
                 >
                     {/* Здесь мы передвигаем наши карточки с помощью translateX, для этого умножаем activeIndex на 100 */}
-                    {React.Children.map(children, (child) => React.cloneElement(child, {width: '260px'}))}
+                    {React.Children.map(children, (child) => React.cloneElement(child, {width: `${width}px`}))}
                 </div>
             </div>
         </>
