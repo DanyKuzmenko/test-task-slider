@@ -1,12 +1,22 @@
 import React, {useEffect} from 'react';
 import '../../index.css';
 
-export function CarouselItem({width, image, date, title, text}) {
+export function CarouselItem({width, image, date, title, text, handleTitleHeight, height}) {
+    const titleElement = React.useRef(null);
+    // Реф, который отвечает за заголовок карточки
+
+    React.useEffect(() => { // Эффект, который передает высоту каждой карточки в функцию
+        if (titleElement) {
+            handleTitleHeight(titleElement.current.offsetHeight);
+        }
+    }, [titleElement])
+
     return (
         <div className="carousel__item" style={{width}}>
-            <img className="carousel__image" src={image} alt=""/>
+            <img className="carousel__image" src={image}/>
             <p className="carousel__date">{date}</p>
-            <h2 className="carousel__title">{title}</h2>
+            <h2 className="carousel__title" ref={titleElement} style={{ height: `${height > 0 ? height : ''}px` }}>{title}</h2>
+            {/*Здесь нужно проверить, что высота не равна 0. Это нужно потому что, пока выполняется useEffect, высота равна 0*/}
             <p className="carousel__text">{text}</p>
         </div>
     );
@@ -23,8 +33,10 @@ function Carousel({children}) {
     // Этот стейт отвечает за ширину карточек в зависимости от разрешения
     const [marginWidth, setMarginWidth] = React.useState(30);
     // Этот стейт отвечает за ширину отступа по краям у слайдера
-    const slider = React.useRef(null);
-    // С помощью рефа связываем slider
+    const [titleMaxHeight, setTitleMaxHeight] = React.useState(0);
+    // Этот стейт отвечает за самый высокий заголовок
+    const [titlesHeight, setTitlesHeight] = React.useState([]);
+    // Этот стейт отвечает за высоту всех заголовков карточек
 
     // useEffect(() => {
     //     // Устанавливаем автоматическую прокрутку каждые 4 секунды
@@ -38,7 +50,7 @@ function Carousel({children}) {
     //     }
     // })
 
-    useEffect(() => { // Эффект, который в зависимости от ширины экрана меняет ширину карточек и ширину отступов
+    React.useEffect(() => { // Эффект, который в зависимости от ширины экрана меняет ширину карточек и ширину отступов
         if (windowWidth < 769) {
             setWidth(280);
             setMarginWidth(20);
@@ -51,7 +63,17 @@ function Carousel({children}) {
         }
     }, [windowWidth])
 
-    useEffect(() => { // Эффект, который устанавливает изначальное значение стейта расширения экрана
+    React.useEffect(() => { // Эффект, который проверяет высоту всех карточек и записывает самую большую в стейт
+        let maxEl = 0;
+        titlesHeight.map((item) => {
+            if (item > maxEl) {
+                maxEl = item;
+            }
+        })
+        setTitleMaxHeight(maxEl);
+    }, [])
+
+    React.useEffect(() => { // Эффект, который устанавливает изначальное значение стейта расширения экрана
         onSubscribe();
         return () => offSubscribe();
     }, [])
@@ -137,6 +159,10 @@ function Carousel({children}) {
         }
     };
 
+    const handleTitleHeight = (titleHeight) => { // Функция, которая записывает высоту каждой карточки в стейт
+        setTitlesHeight(titlesHeight.push(titleHeight));
+    };
+
     return (
         <>
             <div className="carousel__header">
@@ -189,15 +215,18 @@ function Carousel({children}) {
             <div className="carousel">
                 <div
                     className="carousel__inner"
-                    style={{transform: `translateX(-${activeIndex * (windowWidth - marginWidth)}px)`}}
+                    style={{transform: `translateX(-${windowWidth < 1160 ? `${activeIndex * (windowWidth - marginWidth)}px` : `${activeIndex * 100}%`}`}}
+                    // Здесь мы передвигаем наши карточки с помощью translateX, для этого в зависимости от разрешения вводим условие:
+                    // Если ширина экрана меньше 1160px, то активный индекс нужно умножить на ширину карусели, если же ширина экрана
+                    // больше 1160px, то активный индекс нужно умножить на 100%
                     onTouchStart={handleMouseDown}
                     onTouchEnd={handleMouseUp}
                     onMouseDown={handleMouseDown}
                     onMouseUp={handleMouseUp}
-                    ref={slider}
                 >
-                    {/* Здесь мы передвигаем наши карточки с помощью translateX, для этого умножаем activeIndex на 100 */}
-                    {React.Children.map(children, (child) => React.cloneElement(child, {width: `${width}px`}))}
+                    {React.Children.map(children, (child) =>
+                        React.cloneElement(child, {width: `${width}px`, height: titleMaxHeight, handleTitleHeight})
+                    )}
                 </div>
             </div>
         </>
