@@ -133,7 +133,7 @@
     }
 
     &__item {
-     margin: 0 calc((100vw - 60px - 720px) / 2) 0 0;
+      margin: 0 calc((100vw - 60px - 720px) / 2) 0 0;
     }
 
     &__item:nth-of-type(4n) {
@@ -155,7 +155,7 @@
     }
 
     &__text {
-      @include  font(400, 12px, 20px, #527CCD);
+      @include font(400, 12px, 20px, #527CCD);
       max-width: 200px;
     }
 
@@ -210,7 +210,7 @@
     }
 
     &__text {
-      @include  font(400, 12px, 20px, #527CCD);
+      @include font(400, 12px, 20px, #527CCD);
       max-width: 200px;
     }
 
@@ -224,7 +224,92 @@
 @media screen and (max-width: 768px) {
   .carousel {
 
+    &__header {
+      margin: 20px;
+      flex-direction: column;
+      align-items: center;
+    }
 
+    &__header-title {
+      //@include font(700, )
+      margin: 0 0 10px 0;
+    }
+
+    &__menu {
+      flex-direction: column;
+    }
+
+    &__progress-bar {
+      margin: 0 0 20px 0;
+    }
+
+    &__progress {
+      width: 25px;
+    }
+
+    &__button {
+      margin: 0 40px 0 0;
+    }
+
+    &__item {
+      margin: 0 calc(100vw - 40px - 560px) 0 0;
+    }
+
+    &__item:nth-of-type(4n) {
+      margin: 0 calc(100vw - 40px - 560px) 0 0;
+    }
+
+    &__item:nth-of-type(3n) {
+      margin: 0 calc(100vw - 40px - 560px) 0 0;
+    }
+
+    &__item:nth-of-type(2n) {
+      margin: 0 20px 0 0;
+    }
+
+    &__image {
+      width: 240px;
+    }
+
+    &__date {
+      @include font(400, 10px, 18px, #527CCD);
+    }
+
+    &__title {
+      @include font(400, 16px, 22px, #527CCD);
+      max-width: 240px;
+    }
+
+    &__text {
+      @include font(400, 12px, 18px, #527CCD);
+      max-width: 240px;
+    }
+
+  }
+}
+
+@media screen and (max-width: 610px) {
+  .carousel {
+
+    &__progress {
+      width: 10px;
+    }
+
+    &__item {
+      margin: 0 calc((100vw - 280px) / 2) 0 calc((100vw - 40px - 280px) / 2);
+    }
+
+    &__item:nth-of-type(4n) {
+      margin: 0 calc((100vw - 280px) / 2) 0 calc((100vw - 40px - 280px) / 2);
+    }
+
+    &__item:nth-of-type(3n) {
+      margin: 0 calc((100vw - 280px) / 2) 0 calc((100vw - 40px - 280px) / 2);
+    }
+
+    &__item:nth-of-type(2n) {
+      margin: 0 calc((100vw - 280px) / 2) 0 calc((100vw - 40px - 280px) / 2);
+    }
 
   }
 }

@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import '../../index.css';
 
-export function CarouselItem({ width, image, date, title, text }) {
+export function CarouselItem({width, image, date, title, text}) {
     return (
         <div className="carousel__item" style={{width}}>
             <img className="carousel__image" src={image} alt=""/>
@@ -19,7 +19,7 @@ function Carousel({children}) {
     // Этот стейт записывает начальное положение зажатой мыши
     const [windowWidth, setWindowWidth] = React.useState(1160);
     // Этот стейт отвечает за ширину экрана
-    const [width, setWidth] = React.useState(0);
+    const [width, setWidth] = React.useState(260);
     // Этот стейт отвечает за ширину карточек в зависимости от разрешения
     const [marginWidth, setMarginWidth] = React.useState(30);
     // Этот стейт отвечает за ширину отступа по краям у слайдера
@@ -38,9 +38,10 @@ function Carousel({children}) {
     //     }
     // })
 
-    useEffect(() => { // Эффект, который в зависимости от ширины экрана меняет ширину карточек
-        if (windowWidth < 768) {
-            setWidth(200);
+    useEffect(() => { // Эффект, который в зависимости от ширины экрана меняет ширину карточек и ширину отступов
+        if (windowWidth < 769) {
+            setWidth(280);
+            setMarginWidth(20);
         } else if (windowWidth < 1160) {
             setWidth(240);
             setMarginWidth(20);
@@ -50,58 +51,85 @@ function Carousel({children}) {
         }
     }, [windowWidth])
 
-    useEffect(() => {
+    useEffect(() => { // Эффект, который устанавливает изначальное значение стейта расширения экрана
         onSubscribe();
         return () => offSubscribe();
     }, [])
 
-    const handleSubscribe = () => {
+    const handleSubscribe = () => { // Функция, которая записывает в стейт расширение экрана
         setWindowWidth(window.innerWidth);
     }
 
-    const onSubscribe = () => {
+    const onSubscribe = () => { // Функция подписки на изменение расширения экрана
         window.addEventListener('resize', function () {
             setTimeout(handleSubscribe, 1000);
         })
     }
 
-    const offSubscribe = () => {
+    const offSubscribe = () => { // Функция отмены подписки на изменение расширения экрана
         window.removeEventListener('resize', function () {
             setTimeout(handleSubscribe, 1000);
         })
     }
 
-    const leftButtonClick = () => {
+    const leftButtonClick = () => { // Функция обработки клика левой кнопки
         updateIndex(activeIndex - 1);
     };
 
-    const rightButtonClick = () => {
+    const rightButtonClick = () => { // Функция обработки клика правой кнопки
         updateIndex(activeIndex + 1);
     };
 
-    const updateIndex = (newIndex) => {
+    const updateIndex = (newIndex) => { // Функция, которая обновляет активный индекс
         // Здесь мы сравниваем индекс. Если индекс меньше 0, то есть в изначальном положении карточек
         // пользователь нажал кнопку влево, то переключаем на последние карточки (в конец). Если же
         // пользователь, находясь на последних карточках нажал вправо, то переключаем на первые карточки (в начало)
         // Если это не первые и не последние карточки, то просто устанавливаем тот индекс, который пришел.
-        // Также нужно отметить, что т.к. у нас отображается 4 карточки за раз, то нужно количество элементов делить на 4.
-        if (newIndex < 0) {
-            newIndex = (React.Children.count(children) / 4) - 1;
-        } else if (newIndex >= React.Children.count(children) / 4) {
-            newIndex = 0;
+        // Также нужно отметить, что количество отображаемых карточек зависит от ширины экрана, поэтому у нас отображается
+        // разное количество карточек за раз.
+        if (windowWidth > 1159) {
+            if (newIndex < 0) {
+                newIndex = (React.Children.count(children) / 4) - 1;
+            } else if (newIndex >= React.Children.count(children) / 4) {
+                newIndex = 0;
+            }
+        } else if (windowWidth > 768) {
+            if (newIndex < 0) {
+                newIndex = (React.Children.count(children) / 3) - 1;
+            } else if (newIndex >= React.Children.count(children) / 3) {
+                newIndex = 0;
+            }
+        } else if (windowWidth > 610) {
+            if (newIndex < 0) {
+                newIndex = (React.Children.count(children) / 2) - 1;
+            } else if (newIndex >= React.Children.count(children) / 2) {
+                newIndex = 0;
+            }
+        } else if (windowWidth > 320) {
+            if (newIndex < 0) {
+                newIndex = React.Children.count(children) - 1;
+            } else if (newIndex >= React.Children.count(children)) {
+                newIndex = 0;
+            }
         }
 
         setActiveIndex(newIndex);
     };
 
-    const handleMouseDown = (e) => {
+    const handleMouseDown = (e) => { // Функция, которая срабатывает, когда пользователь зажимает мышку
+        // Здесь мы записываем в стейт пиксель, на котором пользователь зажал мышку
         setStartX(e.pageX || e.changedTouches[0].pageX);
     };
 
-    const handleMouseUp = (e) => {
+    const handleMouseUp = (e) => { // Функция, которая срабатывает, когда пользователь отпускает мышку
         e.preventDefault();
+        // Здесь мы записываем в переменную pageX пиксель, на котором пользователь отпустил мышь
         const pageX = e.pageX || e.changedTouches[0].pageX;
+        // Здесь мы записываем в переменную x расстояние от пикселя, на котором пользователь зажал мышку
+        // и на котором отпустил
         const x = startX - pageX;
+        // Вводим условие, если расстояние больше 100 пикселей, то перемещаем карточки вперед,
+        // если же расстояние меньше 100, то перемещаем карточки назад
         if (x > 100) {
             updateIndex(activeIndex + 1)
         } else if (x < -100) {
@@ -115,13 +143,36 @@ function Carousel({children}) {
                 <h1 className="carousel__header-title">Актуальное</h1>
                 <div className="carousel__menu">
                     <div className="carousel__progress-bar">
-                        {/* Вводим условие, которое проверяет активный индекс в данный момент и в зависимости от этого отображает его */}
-                        <div className={`carousel__progress ${activeIndex === 0 ? 'carousel__progress_active' : ''}`}/>
-                        <div className={`carousel__progress ${activeIndex === 1 ? 'carousel__progress_active' : ''}`}/>
-                        <div className={`carousel__progress ${activeIndex === 2 ? 'carousel__progress_active' : ''}`}/>
-                        <div className={`carousel__progress ${activeIndex === 3 ? 'carousel__progress_active' : ''}`}/>
-                        <div className={`carousel__progress ${activeIndex === 4 ? 'carousel__progress_active' : ''}`}/>
-                        <div className={`carousel__progress ${activeIndex === 5 ? 'carousel__progress_active' : ''}`}/>
+                        {/* Вводим условие, которое проверяет ширину экрана и в зависимости от нее перебирает карточки.
+                        Нам важен только index очередной карточки. С помощью него мы отображаем активные карточки.*/}
+                        {windowWidth > 1159 ? children.map((item, index) => {
+                            if (index < 6) {
+                                return (
+                                    <div
+                                        className={`carousel__progress ${activeIndex === index ? 'carousel__progress_active' : ''}`}/>
+                                )
+                            }
+                        }) : windowWidth > 768 ? children.map((item, index) => {
+                                if (index < 8) {
+                                    return (
+                                        <div
+                                            className={`carousel__progress ${activeIndex === index ? 'carousel__progress_active' : ''}`}/>
+                                    )
+                                }
+                            })
+                            : windowWidth > 610 ? children.map((item, index) => {
+                                if (index < 12) {
+                                    return (
+                                        <div
+                                            className={`carousel__progress ${activeIndex === index ? 'carousel__progress_active' : ''}`}/>
+                                    )
+                                }
+                            }) : windowWidth > 320 ? children.map((item, index) => {
+                                return (
+                                    <div
+                                        className={`carousel__progress ${activeIndex === index ? 'carousel__progress_active' : ''}`}/>
+                                )
+                            }) : ''}
                     </div>
                     <div className="carousel__buttons">
                         <button

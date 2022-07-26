@@ -214,5 +214,82 @@
     margin: 0 20px;
   }
 }
+@media screen and (max-width: 768px) {
+  .carousel__header {
+    margin: 20px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .carousel__header-title {
+    margin: 0 0 10px 0;
+  }
+  .carousel__menu {
+    flex-direction: column;
+  }
+  .carousel__progress-bar {
+    margin: 0 0 20px 0;
+  }
+  .carousel__progress {
+    width: 25px;
+  }
+  .carousel__button {
+    margin: 0 40px 0 0;
+  }
+  .carousel__item {
+    margin: 0 calc(100vw - 40px - 560px) 0 0;
+  }
+  .carousel__item:nth-of-type(4n) {
+    margin: 0 calc(100vw - 40px - 560px) 0 0;
+  }
+  .carousel__item:nth-of-type(3n) {
+    margin: 0 calc(100vw - 40px - 560px) 0 0;
+  }
+  .carousel__item:nth-of-type(2n) {
+    margin: 0 20px 0 0;
+  }
+  .carousel__image {
+    width: 240px;
+  }
+  .carousel__date {
+    font-family: "Roboto";
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 18px;
+    color: #527CCD;
+  }
+  .carousel__title {
+    font-family: "Roboto";
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    color: #527CCD;
+    max-width: 240px;
+  }
+  .carousel__text {
+    font-family: "Roboto";
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: #527CCD;
+    max-width: 240px;
+  }
+}
+@media screen and (max-width: 610px) {
+  .carousel__progress {
+    width: 10px;
+  }
+  .carousel__item {
+    margin: 0 calc((100vw - 280px) / 2) 0 calc((100vw - 40px - 280px) / 2);
+  }
+  .carousel__item:nth-of-type(4n) {
+    margin: 0 calc((100vw - 280px) / 2) 0 calc((100vw - 40px - 280px) / 2);
+  }
+  .carousel__item:nth-of-type(3n) {
+    margin: 0 calc((100vw - 280px) / 2) 0 calc((100vw - 40px - 280px) / 2);
+  }
+  .carousel__item:nth-of-type(2n) {
+    margin: 0 calc((100vw - 280px) / 2) 0 calc((100vw - 40px - 280px) / 2);
+  }
+}
 
 /*# sourceMappingURL=index.css.map */
