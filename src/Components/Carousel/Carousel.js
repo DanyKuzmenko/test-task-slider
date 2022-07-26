@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import '../../index.css';
 
 export function CarouselItem({width, image, date, title, text, handleTitleHeight, height}) {
@@ -38,17 +38,17 @@ function Carousel({children}) {
     const [titlesHeight, setTitlesHeight] = React.useState([]);
     // Этот стейт отвечает за высоту всех заголовков карточек
 
-    // useEffect(() => {
-    //     // Устанавливаем автоматическую прокрутку каждые 4 секунды
-    //     const interval = setInterval(() => {
-    //         updateIndex(activeIndex + 1)
-    //     }, 4000);
-    //     // Очищаем интервал
-    //     return () => {
-    //         if (interval)
-    //             clearInterval(interval);
-    //     }
-    // })
+    React.useEffect(() => { // Эффект, который отвечает за автоматическую прокрутку карточек
+         // Устанавливаем автоматическую прокрутку каждые 4 секунды
+         const interval = setInterval(() => {
+             updateIndex(activeIndex + 1)
+         }, 4000);
+         // Очищаем интервал
+         return () => {
+             if (interval)
+                 clearInterval(interval);
+         }
+    })
 
     React.useEffect(() => { // Эффект, который в зависимости от ширины экрана меняет ширину карточек и ширину отступов
         if (windowWidth < 769) {
