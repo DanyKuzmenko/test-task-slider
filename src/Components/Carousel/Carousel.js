@@ -15,7 +15,8 @@ export function CarouselItem({width, image, date, title, text, handleTitleHeight
         <div className="carousel__item" style={{width}}>
             <img className="carousel__image" src={image}/>
             <p className="carousel__date">{date}</p>
-            <h2 className="carousel__title" ref={titleElement} style={{ height: `${height > 0 ? height : ''}px` }}>{title}</h2>
+            <h2 className="carousel__title" ref={titleElement}
+                style={{height: `${height > 0 ? height : ''}px`}}>{title}</h2>
             {/*Здесь нужно проверить, что высота не равна 0. Это нужно потому что, пока выполняется useEffect, высота равна 0*/}
             <p className="carousel__text">{text}</p>
         </div>
@@ -27,7 +28,7 @@ function Carousel({children}) {
     // Этот стейт отвечает за индекс отображаемых карточек
     const [startX, setStartX] = React.useState(0);
     // Этот стейт записывает начальное положение зажатой мыши
-    const [windowWidth, setWindowWidth] = React.useState(1160);
+    const [windowWidth, setWindowWidth] = React.useState(0);
     // Этот стейт отвечает за ширину экрана
     const [width, setWidth] = React.useState(260);
     // Этот стейт отвечает за ширину карточек в зависимости от разрешения
@@ -37,17 +38,18 @@ function Carousel({children}) {
     // Этот стейт отвечает за самый высокий заголовок
     const [titlesHeight, setTitlesHeight] = React.useState([]);
     // Этот стейт отвечает за высоту всех заголовков карточек
+    const [counfOfProgressBars, setCountOfProgressBars] = React.useState([]);
 
     React.useEffect(() => { // Эффект, который отвечает за автоматическую прокрутку карточек
-         // Устанавливаем автоматическую прокрутку каждые 4 секунды
-         const interval = setInterval(() => {
-             updateIndex(activeIndex + 1)
-         }, 4000);
-         // Очищаем интервал
-         return () => {
-             if (interval)
-                 clearInterval(interval);
-         }
+        // Устанавливаем автоматическую прокрутку каждые 4 секунды
+        const interval = setInterval(() => {
+            updateIndex(activeIndex + 1)
+        }, 4000);
+        // Очищаем интервал
+        return () => {
+            if (interval)
+                clearInterval(interval);
+        }
     })
 
     React.useEffect(() => { // Эффект, который в зависимости от ширины экрана меняет ширину карточек и ширину отступов
@@ -61,6 +63,7 @@ function Carousel({children}) {
             setWidth(260);
             setMarginWidth(30);
         }
+        handleProgressBar();
     }, [windowWidth])
 
     React.useEffect(() => { // Эффект, который проверяет высоту всех карточек и записывает самую большую в стейт
@@ -76,6 +79,10 @@ function Carousel({children}) {
     React.useEffect(() => { // Эффект, который устанавливает изначальное значение стейта расширения экрана
         onSubscribe();
         return () => offSubscribe();
+    }, [])
+
+    React.useEffect(() => { // Эффект, который устанавливает начальное значение windowWidth
+        handleSubscribe();
     }, [])
 
     const handleSubscribe = () => { // Функция, которая записывает в стейт расширение экрана
@@ -163,42 +170,50 @@ function Carousel({children}) {
         setTitlesHeight(titlesHeight.push(titleHeight));
     };
 
+    const handleProgressBar = () => { // Функция, которая в зависимости от ширины экрана устанавливает
+        // количество элементов в массиве. Далее мы перебираем эти элементы и в зависимости
+        // от их количества отображаем количество progress баров.
+        let array = [];
+        if (windowWidth > 1159) {
+            children.map((item, index) => {
+                if (index < 6) {
+                    array.push(index);
+                }
+            })
+        } else if (windowWidth > 768) {
+            children.map((item, index) => {
+                if (index < 8) {
+                    array.push(index);
+                }
+            })
+        } else if (windowWidth > 610) {
+            children.map((item, index) => {
+                if (index < 12) {
+                    array.push(index);
+                }
+            })
+        } else if (windowWidth > 320) {
+            children.map((item, index) => {
+                array.push(index);
+            })
+        }
+        setCountOfProgressBars(array);
+    }
+
     return (
         <>
             <div className="carousel__header">
                 <h1 className="carousel__header-title">Актуальное</h1>
                 <div className="carousel__menu">
                     <div className="carousel__progress-bar">
-                        {/* Вводим условие, которое проверяет ширину экрана и в зависимости от нее перебирает карточки.
-                        Нам важен только index очередной карточки. С помощью него мы отображаем активные карточки.*/}
-                        {windowWidth > 1159 ? children.map((item, index) => {
-                            if (index < 6) {
-                                return (
-                                    <div
-                                        className={`carousel__progress ${activeIndex === index ? 'carousel__progress_active' : ''}`}/>
-                                )
-                            }
-                        }) : windowWidth > 768 ? children.map((item, index) => {
-                                if (index < 8) {
-                                    return (
-                                        <div
-                                            className={`carousel__progress ${activeIndex === index ? 'carousel__progress_active' : ''}`}/>
-                                    )
-                                }
-                            })
-                            : windowWidth > 610 ? children.map((item, index) => {
-                                if (index < 12) {
-                                    return (
-                                        <div
-                                            className={`carousel__progress ${activeIndex === index ? 'carousel__progress_active' : ''}`}/>
-                                    )
-                                }
-                            }) : windowWidth > 320 ? children.map((item, index) => {
-                                return (
-                                    <div
-                                        className={`carousel__progress ${activeIndex === index ? 'carousel__progress_active' : ''}`}/>
-                                )
-                            }) : ''}
+                        {/* Перебираем количество элементов в массиве и в зависимости от этого отображаем количество progress баров.
+                        Также проверяем активный прогресс бар с помощью индекса*/}
+                        {counfOfProgressBars.map((item, index) => {
+                            return (
+                                <div
+                                    className={`carousel__progress ${activeIndex === index ? 'carousel__progress_active' : ''}`}/>
+                            )
+                        })}
                     </div>
                     <div className="carousel__buttons">
                         <button
