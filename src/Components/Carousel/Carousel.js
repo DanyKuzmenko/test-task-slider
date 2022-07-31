@@ -44,7 +44,7 @@ function Carousel({children}) {
         // Устанавливаем автоматическую прокрутку каждые 4 секунды
         const interval = setInterval(() => {
             updateIndex(activeIndex + 1)
-        }, 4000);
+        }, 10000);
         // Очищаем интервал
         return () => {
             if (interval)
